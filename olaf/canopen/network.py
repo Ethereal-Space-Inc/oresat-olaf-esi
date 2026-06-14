@@ -140,7 +140,7 @@ class CanNetwork:
             if self._first_no_bus:
                 logger.critical(f"{self._channel} does not exists, nothing OLAF can do")
                 self._first_no_bus = False
-            if bus is None:
+            if bus is not None:
                 self._state = CanNetworkState.NETWORK_DOWN
         elif self._state == CanNetworkState.NETWORK_DOWN:
             if self._first_bus_down:
