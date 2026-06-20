@@ -1,7 +1,5 @@
 """File cache class for OreSat files."""
 
-from __future__ import annotations
-
 import shutil
 from copy import deepcopy
 from os import listdir, remove

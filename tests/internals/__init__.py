@@ -1,9 +1,4 @@
-from __future__ import annotations
-
-import typing
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 import canopen
 from canopen.objectdictionary import ODVariable

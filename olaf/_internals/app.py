@@ -1,16 +1,19 @@
 """OLAF App."""
 
-from __future__ import annotations
-
 import os
 import signal
 import subprocess
-from typing import TYPE_CHECKING
+from collections.abc import Callable
+from types import FrameType
 
+import canopen
 from loguru import logger
 
 from ..canopen.master_node import MasterNode
+from ..canopen.network import CanNetwork
 from ..canopen.node import Node, NodeStop
+from ..common.resource import Resource
+from ..common.service import Service
 from .resources.ecss import EcssResource
 from .resources.fread import FreadResource
 from .resources.fwrite import FwriteResource
@@ -19,16 +22,6 @@ from .services.logs import LogsService
 from .services.os_command import OsCommandService
 from .services.updater import UpdaterService
 from .updater import Updater
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from types import FrameType
-
-    import canopen
-
-    from ..canopen.network import CanNetwork
-    from ..common.resource import Resource
-    from ..common.service import Service
 
 
 class App:

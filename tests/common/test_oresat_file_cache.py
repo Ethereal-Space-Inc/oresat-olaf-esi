@@ -165,13 +165,13 @@ class TestOreSatFileCache:
             path.touch()
             result.add(path, consume=True)
 
-        for file, name in zip(result.files("alpha"), alpha):
+        for file, name in zip(result.files("alpha"), alpha, strict=True):
             assert file.name == name
 
-        for file, name in zip(result.files("beta"), beta):
+        for file, name in zip(result.files("beta"), beta, strict=True):
             assert file.name == name
 
-        for file, name in zip(result.files("gamma"), gamma):
+        for file, name in zip(result.files("gamma"), gamma, strict=False):
             assert file.name == name
 
         assert len(result.files("gamma")) == 1  # duplicate files are overwritten via add()

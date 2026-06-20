@@ -1,7 +1,5 @@
 """OLAF (OreSat Linux App Framework)"""
 
-from __future__ import annotations
-
 import sys
 from argparse import ArgumentParser, Namespace
 from logging.handlers import SysLogHandler

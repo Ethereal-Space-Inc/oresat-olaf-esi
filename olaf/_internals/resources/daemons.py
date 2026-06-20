@@ -1,7 +1,5 @@
 """Resource for getting daemons info"""
 
-from __future__ import annotations
-
 from ...common.daemon import DaemonState
 from ...common.resource import Resource
 

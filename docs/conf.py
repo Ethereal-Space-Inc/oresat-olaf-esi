@@ -14,11 +14,11 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 project = "OreSat Linux App Framework"
-year = datetime.now().date().year
-copyright = f"{year}, Portland State Aerospace Society"  # pylint: disable=W0622
+year = datetime.now(UTC).date().year
+copyright = f"{year}, Portland State Aerospace Society"  # noqa: A001
 author = "PSAS"
 
 
