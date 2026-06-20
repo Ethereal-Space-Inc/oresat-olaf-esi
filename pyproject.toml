@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm"]
+requires = ["setuptools>=80", "setuptools_scm[simple]>=9.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -49,9 +49,6 @@ exclude = ["docs*", "tests*"]
 
 [tool.setuptools.package-data]
 "*" = ["*.html", "*.ico"]
-
-[tool.setuptools_scm]
-write_to = "olaf/_version.py"
 
 [tool.ruff]
 line-length = 100
