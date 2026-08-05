@@ -1,9 +1,8 @@
 """OLAF (OreSat Linux App Framework)"""
 
-from __future__ import annotations
-
 import sys
 from argparse import ArgumentParser, Namespace
+from importlib.metadata import PackageNotFoundError, version
 from logging.handlers import SysLogHandler
 
 from loguru import logger
@@ -29,9 +28,10 @@ from .common.resource import Resource
 from .common.service import Service, ServiceState
 
 try:
-    from ._version import version as __version__
-except ImportError:
+    __version__ = version("oresat-olaf")
+except PackageNotFoundError:
     __version__ = "0.0.0"  # package is not installed
+
 
 __all__ = [
     "A8_CPUFREQS",

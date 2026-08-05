@@ -1,9 +1,4 @@
-from __future__ import annotations
-
-import typing
-
-if typing.TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 import canopen
 from canopen.objectdictionary import ODVariable
@@ -41,7 +36,7 @@ class MockApp:
         self.node = MockNode(cachedir)
         self.resource = resource
 
-    def sdo_read(self, index: int | str, subindex: None | int | str) -> int | float | str | bytes:
+    def sdo_read(self, index: int | str, subindex: int | str | None) -> int | float | str | bytes:
         co_node = self.node._node
         domain = canopen.objectdictionary.DOMAIN
 
@@ -62,7 +57,7 @@ class MockApp:
     def sdo_write(
         self,
         index: int | str,
-        subindex: None | int | str,
+        subindex: int | str | None,
         value: bool | str | bytes,
     ) -> None:
         co_node = self.node._node

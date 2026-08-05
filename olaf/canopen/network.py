@@ -1,11 +1,9 @@
 """CAN network"""
 
-from __future__ import annotations
-
 import os
 import subprocess
+from collections.abc import Callable
 from enum import IntEnum, auto
-from typing import Callable
 
 import can
 import canopen

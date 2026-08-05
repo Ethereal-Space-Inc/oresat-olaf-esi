@@ -1,19 +1,14 @@
 """OreSat CANopen Master Node class to support the C3"""
 
-from __future__ import annotations
-
 from time import monotonic
-from typing import TYPE_CHECKING, NamedTuple
+from typing import NamedTuple
 
 import canopen
+from canopen.sdo import SdoArray, SdoRecord, SdoVariable
 from loguru import logger
 
+from .network import CanNetwork
 from .node import Node
-
-if TYPE_CHECKING:
-    from canopen.sdo import SdoArray, SdoRecord, SdoVariable
-
-    from ..canopen.network import CanNetwork
 
 
 class NodeHeartbeatInfo(NamedTuple):

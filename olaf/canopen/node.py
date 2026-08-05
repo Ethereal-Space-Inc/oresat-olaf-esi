@@ -1,14 +1,13 @@
 """OreSat CANopen Node"""
 
-from __future__ import annotations
-
 import os
 import struct
+from collections.abc import Callable
 from enum import IntEnum
 from pathlib import Path
 from threading import Event
 from time import monotonic
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from canopen import LocalNode, ObjectDictionary
 from canopen.objectdictionary import (
@@ -27,9 +26,6 @@ from ..canopen.network import CanNetwork, CanNetworkState
 from ..common.daemon import Daemon
 from ..common.oresat_file_cache import OreSatFileCache
 from . import EmcyCode
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 class NodeStop(IntEnum):

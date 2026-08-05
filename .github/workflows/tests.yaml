@@ -17,10 +17,10 @@ jobs:
     - name: Clone this repository
       uses: actions/checkout@v6
 
-    - name: Set up Python 3.9
+    - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: "3.9"
+        python-version: "3.11"
 
     - name: Install Dependencies
       id: dependencies
@@ -33,7 +33,7 @@ jobs:
 
     - name: Lint with Ruff
       if: always() && steps.dependencies.conclusion == 'success'
-      run: ruff check olaf tests
+      run: ruff check
 
     - name: Check format with Ruff
       if: always() && steps.dependencies.conclusion == 'success'
