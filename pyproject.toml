@@ -39,9 +39,6 @@ dev = [
     "types-pywin32",
     "pytest",
     "pytest-cov",
-    "sphinx",
-    "sphinx-rtd-theme",
-    "sphinxcontrib-mermaid"
 ]
 
 [tool.setuptools.packages.find]
