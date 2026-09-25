@@ -62,17 +62,28 @@ class OreSatFile:
         """
 
         self._name = basename(file)
+        self._non_oresat = False
 
         split = self._name.split("_")
         if len(split) != 3:
-            raise ValueError("invalid OreSat file name")
+            self._non_oresat = True
+            self._card = "none"
+            self._keyword = "none"
+            self._date = float(0)
+            self._extension = ""
+            return
 
         self._card = split[0]
         self._keyword = split[1]
         temp = split[2]
 
         if not self._card or not self._keyword or not temp:
-            raise ValueError("invalid OreSat file name")
+            self._non_oresat = True
+            self._card = "none"
+            self._keyword = "none"
+            self._date = float(0)
+            self._extension = ""
+            return
 
         if "." in temp:
             self._date = float(temp.split(".")[0]) / 1000
