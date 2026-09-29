@@ -9,11 +9,13 @@ from threading import Thread
 from typing import TYPE_CHECKING, Any
 
 import canopen
+from canopen.sdo.exceptions import SdoError
 from flask import Flask, Response, jsonify, render_template, request, send_from_directory
 from loguru import logger
 from oresat_configs import Mission
 from werkzeug.serving import BaseWSGIServer, make_server
 
+from ...canopen.master_node import MasterNode
 from ...common import natsorted
 from ..app import app
 
@@ -299,6 +301,132 @@ def od_subindex(index: str, subindex: str) -> Response:
             return make_error_json(str(e))
 
     return jsonify(_object_to_dict(idx, subidx))
+
+
+@rest_api.app.route("/sdo/<card>/<index>", methods=["GET", "PUT"])
+def sdo_index(card: str, index: str) -> Response:
+    """
+    Read or write a value from OD with only a index using an SDO.
+    Only compatable with the Master Node.
+    """
+
+    try:
+        if card.startswith("0x"):
+            card_id: int | str = int(card, 16)
+        elif card[0] in "0123456789":
+            card_id = int(card)
+        else:
+            card_id = card
+
+        if index.startswith("0x"):
+            idx: int | str = int(index, 16)
+        elif index[0] in "0123456789":
+            idx = int(index)
+        else:
+            idx = index
+    except ValueError:
+        return make_error_json(f"invalid card {card} or index {index}")
+
+    if type(app.node) is not MasterNode:
+        return make_error_json("sdo only avaliable on c3.")
+
+    try:
+        obj = app.node.od_db[idx]
+    except KeyError:
+        index_name = f"0x{idx:X}" if isinstance(idx, int) else idx
+        msg = f"no object at card {card},  index {index_name}"
+        logger.error(f"REST API error: {msg}")
+        return make_error_json(msg)
+
+    if request.method == "PUT":
+        try:
+            json_value = request.json["value"]
+
+            # convert value from JSON to bytes for SDO callback
+            value = _json_value_to_value(obj.data_type, json_value)
+            raw = obj.encode_raw(value)
+
+            app.node.sdo_write(card_id, idx, None, value)
+        except SdoError:
+            return jsonify({"value":"SDO Error"})
+        except Exception as e:
+            logger.error(f"REST API error: {e}")
+            return make_error_json(str(e))
+
+    try:
+        value = app.node.sdo_read(card_id, idx, None)
+    except SdoError:
+        value = "SDO Error"
+
+    data = {
+        "value": value
+    }
+    return jsonify(data)
+
+
+@rest_api.app.route("/sdo/<card>/<index>/<subindex>", methods=["GET", "PUT"])
+def sdo_subindex(card: str, index: str, subindex: str) -> Response:
+    """Read or write a value from OD using an SDO. Only compatable with the Master Node."""
+
+    try:
+        if card.startswith("0x"):
+            card_id: int | str = int(card, 16)
+        elif card[0] in "0123456789":
+            card_id = int(card)
+        else:
+            card_id = card
+
+        if index.startswith("0x"):
+            idx: int | str = int(index, 16)
+        elif index[0] in "0123456789":
+            idx = int(index)
+        else:
+            idx = index
+
+        if subindex.startswith("0x"):
+            subidx: int | str = int(subindex, 16)
+        elif subindex[0] in "0123456789":
+            subidx = int(subindex)
+        else:
+            subidx = subindex
+    except ValueError:
+        return make_error_json(f"invalid card, {card}, index {index}, or subindex {subindex}")
+
+    if type(app.node) is not MasterNode:
+        return make_error_json("sdo only avaliable on c3.")
+
+    try:
+        obj = app.node.od_db[card][idx][subidx]
+    except (KeyError, TypeError):
+        index_name = f"0x{idx:X}" if isinstance(idx, int) else idx
+        subindex_name = f"0x{subidx:X}" if isinstance(subidx, int) else subidx
+        msg = f"no object at card {card_id}, index {index_name}, subindex {subindex_name}"
+        logger.error(f"REST API error: {msg}")
+        return make_error_json(msg)
+
+    if request.method == "PUT":
+        try:
+            json_value = request.json["value"]
+
+            # convert value from JSON to bytes for SDO callback
+            value = _json_value_to_value(obj.data_type, json_value)
+            raw = value if obj.data_type in BYTES_TYPES else obj.encode_raw(value)
+            app.node.sdo_write(card_id, idx, subidx, value)
+        except SdoError:
+            return jsonify({"value":"SDO Error"})
+        except Exception as e:  # pylint: disable=W0718
+            logger.exception(f"REST API error: {e}")
+            return make_error_json(str(e))
+
+    try:
+        value = app.node.sdo_read(card_id, idx, subidx)
+    except SdoError:
+        value = "SDO Error"
+
+    data = {
+        "value": value
+    }
+    return jsonify(data)
 
 
 def _object_to_dict(
