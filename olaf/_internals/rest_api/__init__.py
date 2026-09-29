@@ -344,7 +344,6 @@ def sdo_index(card: str, index: str) -> Response:
 
             # convert value from JSON to bytes for SDO callback
             value = _json_value_to_value(obj.data_type, json_value)
-            raw = obj.encode_raw(value)
 
             app.node.sdo_write(card_id, idx, None, value)
         except SdoError:
@@ -410,7 +409,6 @@ def sdo_subindex(card: str, index: str, subindex: str) -> Response:
 
             # convert value from JSON to bytes for SDO callback
             value = _json_value_to_value(obj.data_type, json_value)
-            raw = value if obj.data_type in BYTES_TYPES else obj.encode_raw(value)
             app.node.sdo_write(card_id, idx, subidx, value)
         except SdoError:
             return jsonify({"value":"SDO Error"})
