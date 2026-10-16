@@ -2,8 +2,6 @@
 
 from pathlib import Path
 
-import pytest
-
 from olaf.common.oresat_file import OreSatFile, new_oresat_file
 
 
