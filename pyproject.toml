@@ -24,7 +24,7 @@ dependencies = [
     "oresat-configs @ git+https://github.com/Ethereal-Space-Inc/oresat-configs-esi",
 ]
 
-dynamic = ["version"]
+version="10.0.0"
 
 [dependency-groups]
 dev = [
