@@ -347,7 +347,7 @@ def sdo_index(card: str, index: str) -> Response:
 
             app.node.sdo_write(card_id, idx, None, value)
         except SdoError:
-            return jsonify({"value":"SDO Error"})
+            return jsonify({"value": "SDO Error"})
         except Exception as e:
             logger.error(f"REST API error: {e}")
             return make_error_json(str(e))
@@ -357,9 +357,7 @@ def sdo_index(card: str, index: str) -> Response:
     except SdoError:
         value = "SDO Error"
 
-    data = {
-        "value": value
-    }
+    data = {"value": value}
     return jsonify(data)
 
 
@@ -411,7 +409,7 @@ def sdo_subindex(card: str, index: str, subindex: str) -> Response:
             value = _json_value_to_value(obj.data_type, json_value)
             app.node.sdo_write(card_id, idx, subidx, value)
         except SdoError:
-            return jsonify({"value":"SDO Error"})
+            return jsonify({"value": "SDO Error"})
         except Exception as e:  # pylint: disable=W0718
             logger.exception(f"REST API error: {e}")
             return make_error_json(str(e))
@@ -421,9 +419,7 @@ def sdo_subindex(card: str, index: str, subindex: str) -> Response:
     except SdoError:
         value = "SDO Error"
 
-    data = {
-        "value": value
-    }
+    data = {"value": value}
     return jsonify(data)
 
 
